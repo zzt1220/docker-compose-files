@@ -1,0 +1,29 @@
+# https://github.com/etcd-io/etcd/releases
+version: "3"
+services:
+  etcd:
+    image: gcr.io/etcd-development/etcd:v3.4.32
+    container_name: etcd-gcr-v3.4.32 # 容器名称
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    volumes:
+      - /Users/zztan/Applications/etcd/etcd_3_4_2/log:/opt/log/etcd
+      - /Users/zztan/Applications/etcd/etcd_3_4_2/data:/etcd-data
+      - /etc/localtime:/etc/localtime:ro # 让容器的时钟与宿主机时钟同步，避免时间的问题，ro是read only的意思，就是只读。
+    command: /usr/local/bin/etcd
+      --name etcd1
+      --data-dir /etcd-data
+      --listen-client-urls http://0.0.0.0:2379
+      --advertise-client-urls http://0.0.0.0:2379
+      --listen-peer-urls http://0.0.0.0:2380
+      --initial-advertise-peer-urls http://0.0.0.0:2380
+      --initial-cluster etcd1=http://0.0.0.0:2380
+      --initial-cluster-token tkn
+      --initial-cluster-state new
+      --log-level info
+      --logger zap
+      --log-outputs /opt/log/etcd/etcd.log
+    restart: always # 容器随docker启动自启

@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:7.2.4
+    container_name: redis7_2_4 # 容器名称
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "6379:6379"
+    volumes:
+      - /Users/zztan/Applications/redis/redis_7_2_4/log:/opt/log/redis
+      - /Users/zztan/Applications/redis/redis_7_2_4/conf:/opt/conf/redis
+      - /Users/zztan/Applications/redis/redis_7_2_4/data:/opt/data/redis
+      - /etc/localtime:/etc/localtime:ro # 让容器的时钟与宿主机时钟同步，避免时间的问题，ro是read only的意思，就是只读。
+    command: redis-server /opt/conf/redis/redis.conf
+    restart: always # 容器随docker启动自启
